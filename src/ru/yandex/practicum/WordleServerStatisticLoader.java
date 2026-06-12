@@ -134,4 +134,70 @@ public class WordleServerStatisticLoader {
 
         return statistics;
     }
+
+    public List<PlayerStatistic> getTop10WithPlayer(
+            String nickname
+    ) throws IOException {
+
+        List<PlayerStatistic> statistics =
+                load();
+
+        statistics.sort(
+                Comparator.comparingInt(
+                        PlayerStatistic::getWins
+                ).reversed()
+        );
+
+        List<PlayerStatistic> result =
+                new ArrayList<>();
+
+        int limit =
+                Math.min(10, statistics.size());
+
+        for (int i = 0; i < limit; i++) {
+            result.add(statistics.get(i));
+        }
+
+        boolean playerInTop =
+                result.stream()
+                        .anyMatch(player ->
+                                player.getNickname()
+                                        .equals(nickname)
+                        );
+
+        if (!playerInTop) {
+
+            for (PlayerStatistic player : statistics) {
+
+                if (player.getNickname()
+                        .equals(nickname)) {
+
+                    player.setPlace(
+                            statistics.indexOf(player) + 1
+                    );
+
+                    result.add(player);
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < result.size(); i++) {
+
+            result.get(i).setPlace(i + 1);
+        }
+
+        if (!playerInTop
+                && !result.isEmpty()) {
+
+            PlayerStatistic lastPlayer =
+                    result.get(result.size() - 1);
+
+            lastPlayer.setPlace(
+                    statistics.indexOf(lastPlayer) + 1
+            );
+        }
+
+        return result;
+    }
 }

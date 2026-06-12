@@ -129,8 +129,25 @@ public class WordleServer {
             return;
         }
 
+        String nickname = "";
+
+        String query =
+                exchange.getRequestURI()
+                        .getQuery();
+
+        if (query != null
+                && query.startsWith("nickname=")) {
+
+            nickname =
+                    query.substring(
+                            "nickname=".length()
+                    );
+        }
+
         List<PlayerStatistic> top =
-                loader.getTop10();
+                loader.getTop10WithPlayer(
+                        nickname
+                );
 
         String response =
                 gson.toJson(top);

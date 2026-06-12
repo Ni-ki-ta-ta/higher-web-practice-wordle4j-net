@@ -39,6 +39,7 @@ public class Wordle {
 
             System.out.println("Игра Wordle началась!");
             System.out.println("Угадайте слово из 5 букв.");
+            System.out.println("Для получения подсказки введите пустую строку.");
 
             while (!game.isWon() && !game.isLost()) {
 
@@ -97,7 +98,7 @@ public class Wordle {
                         game
                 );
 
-                showTopPlayers();
+                showTopPlayers(nickname);
 
             } else {
 
@@ -177,12 +178,18 @@ public class Wordle {
         }
     }
 
-    private static void showTopPlayers() {
+    private static void showTopPlayers(
+            String nickname
+    ) {
 
         try {
 
             URL url =
-                    new URL(TOP_URL);
+                    new URL(
+                            TOP_URL
+                                    + "?nickname="
+                                    + nickname
+                    );
 
             HttpURLConnection connection =
                     (HttpURLConnection) url.openConnection();
@@ -210,12 +217,10 @@ public class Wordle {
                 System.out.println();
                 System.out.println("Топ игроков:");
 
-                int place = 1;
-
                 for (PlayerStatistic player : top) {
 
                     System.out.println(
-                            place
+                            player.getPlace()
                                     + ". "
                                     + player.getNickname()
                                     + " - "
@@ -224,8 +229,6 @@ public class Wordle {
                                     + player.getSteps()
                                     + " шагов"
                     );
-
-                    place++;
                 }
             }
 

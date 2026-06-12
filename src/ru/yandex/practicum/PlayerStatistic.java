@@ -8,6 +8,8 @@ public class PlayerStatistic {
 
     private int steps;
 
+    private int place;
+
     private boolean usedHints;
 
     public PlayerStatistic() {
@@ -23,6 +25,14 @@ public class PlayerStatistic {
         this.wins = wins;
         this.steps = steps;
         this.usedHints = usedHints;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+    public void setPlace(int place) {
+        this.place = place;
     }
 
     public String getNickname() {

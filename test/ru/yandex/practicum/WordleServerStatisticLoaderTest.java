@@ -186,4 +186,78 @@ class WordleServerStatisticLoaderTest {
                 "Метод getTop10 должен возвращать не более десяти игроков"
         );
     }
+
+    @Test
+    void shouldAddPlayerOutsideTop10WithRealPlace() throws IOException {
+
+        List<PlayerStatistic> statistics = new ArrayList<>();
+
+        for (int i = 1; i <= 15; i++) {
+
+            PlayerStatistic player =
+                    new PlayerStatistic(
+                            "player" + i,
+                            16 - i,
+                            3,
+                            false
+                    );
+
+            statistics.add(player);
+        }
+
+        loader.save(statistics);
+
+        List<PlayerStatistic> result =
+                loader.getTop10WithPlayer("player15");
+
+        assertEquals(
+                11,
+                result.size(),
+                "Топ-10 должен содержать дополнительного игрока вне рейтинга"
+        );
+
+        PlayerStatistic lastPlayer =
+                result.get(result.size() - 1);
+
+        assertEquals(
+                "player15",
+                lastPlayer.getNickname(),
+                "Последним должен быть запрошенный игрок"
+        );
+
+        assertEquals(
+                15,
+                lastPlayer.getPlace(),
+                "Игрок должен видеть своё реальное место в общем рейтинге"
+        );
+    }
+
+    @Test
+    void shouldNotAddPlayerIfAlreadyInTop10() throws IOException {
+
+        List<PlayerStatistic> statistics = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+
+            statistics.add(
+                    new PlayerStatistic(
+                            "player" + i,
+                            11 - i,
+                            3,
+                            false
+                    )
+            );
+        }
+
+        loader.save(statistics);
+
+        List<PlayerStatistic> result =
+                loader.getTop10WithPlayer("player1");
+
+        assertEquals(
+                10,
+                result.size(),
+                "Игрок из топ-10 не должен дублироваться"
+        );
+    }
 }
