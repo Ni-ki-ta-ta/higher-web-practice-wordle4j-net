@@ -27,3 +27,7 @@ replay_pid*
 out
 *.iml
 /.idea/
+
+statistics.json
+test-statistics.json
+wordle.log
